@@ -509,32 +509,32 @@ public:
         }
         return false;
     }
-    Dataset extract(int startRow = 0, int endRow = -1, int startCol = 0, int endCol = -1) const
+    Dataset extract(int startRow = 0, int endRow = -1, int startCol = 0, int endCol = -1) const 
     {
         Dataset newsheet;
-        int numRows = this->data->length();
-        int numCols;
-        if (numRows == 0)
+        const int numRows = data->length();
+        if (numRows == 0) {
             return newsheet;
-        else
-            numCols = this->data->get(0)->length();
-        if (endRow == -1 || endRow >= numRows)
+        }
+        const int numCols = data->get(0)->length();
+
+        if (endRow == -1 || endRow >= numRows) {
             endRow = numRows - 1;
-        if (endCol == -1 || endCol >= numCols)
+        }
+        if (endCol == -1 || endCol >= numCols) {
             endCol = numCols - 1;
-
-        if (startCol >= numCols || startRow >= numRows)
-            throw std::out_of_range("get(): Out of range");
-        if (startCol <= -1 || startRow <= -1 || startRow > endRow || startCol > endCol || endRow < -1 || endCol < -1)
-            throw std::out_of_range("get(): Out of range");
-
-        if (startCol < this->nameCol->length())
-            newsheet.nameCol = this->nameCol->subList(startCol, endCol + 1);
-        for (int i = startRow; i <= endRow; i++)
-        {
-            newsheet.data->push_back(this->data->get(i)->subList(startCol, endCol + 1));
+        }
+        if (
+            startRow < 0 || startCol < 0 || startRow > endRow || startCol > endCol || startRow >= numRows || startCol >= numCols) {
+                throw std::out_of_range("extract(): Out of range");
+            }
+        for (int col = startCol; col <= endCol && col < nameCol->length(); ++col) {
+            newsheet.nameCol->push_back(nameCol->get(col));
         }
 
+        for (int row = startRow; row <= endRow; ++row) {
+            newsheet.data->push_back(data->get(row)->subList(startCol, endCol + 1));
+        }
         return newsheet;
     }
     double distanceEuclidean(const List<int> *a, const List<int> *b) const
