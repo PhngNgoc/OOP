@@ -171,7 +171,6 @@ public:
             array[i] = temp->data;
             temp = temp->next;
         }
-        delete temp;
     }
     void clear()
     {
