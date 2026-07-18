@@ -601,13 +601,14 @@ public:
             return result;
         if (Y_train.nameCol->length() > 0)
             result.nameCol->push_back(Y_train.nameCol->get(0));
+        if (k > length) {
+            throw std::out_of_range("predict(): k is too large");
+        }
 
         int length = min(X_train.data->length(), Y_train.data->length());
         double *distance = new double[length];
         int *label = new int[length];
-        if (k > length) {
-            throw std::out_of_range("predict(): k is too large");
-        }
+
         for (int i = 0; i < this->data->length(); i++)
         {
             int count = 0;
